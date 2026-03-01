@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduFlow · COS 101</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #f5f0e8;
+  --cream-dark: #ede5d5;
+  --ink: #1a1208;
+  --ink-mid: #3d3020;
+  --ink-light: #6b5e48;
+  --accent: #c8492a;
+  --accent-warm: #e07b3a;
+  --gold: #d4a017;
+  --teal: #1a6b6b;
+  --teal-light: #e4f0ef;
+  --card-bg: #fefcf8;
+  --border: rgba(26,18,8,0.1);
+  --shadow: 0 4px 32px rgba(26,18,8,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+/* ── NAVIGATION ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(245,240,232,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  animation: slideDown 0.5s ease both;
+}
+
+@keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.nav-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.nav-brand .logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.nav-brand .logo span { color: var(--accent); }
+.nav-brand .course-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  margin-left: 4px;
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav-items a {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink-light);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.nav-items a:hover { background: var(--cream-dark); color: var(--ink); }
+.nav-items a.active {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 48px 60px;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 80px;
+  align-items: center;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(200,73,42,0.08);
+  padding: 6px 14px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+.hero-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 5vw, 4.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.hero h1 em { font-style: italic; color: var(--accent); }
+
+.hero-subtitle {
+  font-size: 1.05rem;
+  color: var(--ink-light);
+  line-height: 1.7;
+  max-width: 480px;
+  margin-bottom: 36px;
+  font-weight: 300;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+.hstat { display: flex; flex-direction: column; gap: 2px; }
+.hstat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1;
+}
+.hstat-lbl { font-size: 0.78rem; color: var(--ink-light); text-transform: uppercase; letter-spacing: 1px; }
+
+.hero-visual {
+  background: var(--ink);
+  border-radius: 24px;
+  padding: 40px;
+  color: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+.hero-visual::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0.15;
+}
+.hero-visual::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 140px; height: 140px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0.1;
+}
+.visual-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.4);
+  margin-bottom: 12px;
+}
+.visual-time {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--cream);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.visual-day { font-size: 1rem; color: rgba(245,240,232,0.6); margin-bottom: 32px; }
+
+.visual-next {
+  background: rgba(245,240,232,0.06);
+  border: 1px solid rgba(245,240,232,0.1);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+.visual-next-label { font-size: 0.72rem; color: rgba(245,240,232,0.4); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.visual-next-title { font-weight: 600; font-size: 0.95rem; }
+.visual-next-time { font-size: 0.8rem; color: var(--accent-warm); margin-top: 3px; }
+
+.semester-pill {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+}
+
+/* ── MAIN LAYOUT ── */
+.wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 48px 80px;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 32px;
+}
+
+/* left column stacks cards vertically */
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* right column stacks cards vertically */
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.card-icon {
+  width: 36px; height: 36px;
+  background: var(--ink);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.card-title h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.card-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--accent);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+.card-badge.teal { background: var(--teal); }
+.card-badge.gold { background: var(--gold); color: var(--ink); }
+
+/* ── ANNOUNCEMENTS ── */
+.announcements-body { padding: 24px 32px; display: flex; flex-direction: column; gap: 16px; }
+
+.ann-item {
+  display: flex;
+  gap: 18px;
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+  animation: fadeUp 0.5s ease both;
+}
+.ann-item:nth-child(1) { animation-delay: 0.15s; }
+.ann-item:nth-child(2) { animation-delay: 0.2s; }
+.ann-item:nth-child(3) { animation-delay: 0.25s; }
+.ann-item.pinned {
+  background: rgba(200,73,42,0.04);
+  border-color: rgba(200,73,42,0.2);
+}
+.ann-item:hover { transform: translateX(4px); box-shadow: 4px 8px 24px rgba(26,18,8,0.07); }
+
+.ann-avatar {
+  width: 48px; height: 48px;
+  background: var(--ink);
+  border-radius: 12px;
+  display: grid; place-items: center;
+  font-weight: 700; color: var(--cream);
+  font-size: 1rem;
+  flex-shrink: 0;
+  font-family: 'Playfair Display', serif;
+}
+.ann-avatar.red { background: var(--accent); }
+.ann-avatar.teal { background: var(--teal); }
+.ann-avatar.gold { background: var(--gold); color: var(--ink); }
+
+.ann-body { flex: 1; }
+.ann-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; gap: 12px; }
+.ann-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ann-title { font-weight: 600; font-size: 1rem; color: var(--ink); }
+.ann-pin {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase;
+  background: var(--accent); color: white;
+  padding: 2px 8px; border-radius: 20px;
+}
+.ann-date { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--ink-light); flex-shrink: 0; }
+.ann-text { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.65; margin-bottom: 10px; }
+.ann-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+.ann-tag {
+  font-size: 0.78rem; color: var(--ink-light);
+  background: var(--cream-dark);
+  padding: 3px 10px; border-radius: 20px;
+}
+
+/* ── COURSE SCHEDULE ── */
+.courses-body { padding: 24px 32px; display: flex; flex-direction: column; gap: 12px; }
+
+.course-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 22px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--cream);
+  transition: all 0.2s;
+  animation: fadeUp 0.5s ease both;
+  text-decoration: none;
+  color: inherit;
+}
+.course-card:hover { background: var(--card-bg); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(26,18,8,0.1); }
+
+.course-stripe {
+  width: 5px;
+  height: 52px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.course-code {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.course-name { font-size: 0.82rem; color: var(--ink-light); }
+
+.course-right { text-align: right; }
+.course-days-wrap { display: flex; gap: 4px; margin-bottom: 4px; justify-content: flex-end; }
+.course-day {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.course-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--ink-light);
+  margin-bottom: 3px;
+}
+.course-venue { font-size: 0.75rem; color: var(--ink-light); }
+
+/* ── CLASS REPS ── */
+.reps-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 14px; }
+
+.rep-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: all 0.2s;
+}
+.rep-card:hover { background: var(--card-bg); box-shadow: 0 6px 24px rgba(26,18,8,0.08); transform: translateX(3px); }
+
+.rep-avatar {
+  width: 58px; height: 58px;
+  border-radius: 14px;
+  background: var(--ink);
+  display: grid; place-items: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; font-size: 1.4rem;
+  color: var(--cream);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.rep-avatar.female { background: var(--teal); }
+.rep-name { font-weight: 600; font-size: 0.95rem; color: var(--ink); margin-bottom: 4px; }
+.rep-role {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.rep-reg {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--ink-light);
+  background: var(--cream-dark);
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ── UPCOMING EVENTS ── */
+.events-body { padding: 20px 28px; }
+
+.event-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.event-row:last-child { border-bottom: none; }
+
+.event-cal {
+  background: var(--ink);
+  color: var(--cream);
+  min-width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.event-cal .eday { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; line-height: 1; }
+.event-cal .emon { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; }
+
+.event-title { font-weight: 600; font-size: 0.92rem; color: var(--ink); margin-bottom: 4px; }
+.event-desc { font-size: 0.8rem; color: var(--ink-light); line-height: 1.5; }
+.event-chip {
+  display: inline-block; margin-top: 5px;
+  font-size: 0.7rem; font-weight: 500;
+  padding: 2px 8px; border-radius: 20px;
+}
+.event-chip.exam { background: rgba(200,73,42,0.1); color: var(--accent); }
+.event-chip.test { background: rgba(212,160,23,0.15); color: #a07010; }
+.event-chip.assign { background: var(--teal-light); color: var(--teal); }
+
+/* ── QUICK STATS ── */
+.stats-body { padding: 20px 28px; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat-tile {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 16px;
+  text-align: center;
+  transition: 0.2s;
+}
+.stat-tile:hover { background: var(--ink); }
+.stat-tile:hover .stnum, .stat-tile:hover .stlbl { color: var(--cream); }
+.stnum {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem; font-weight: 900;
+  color: var(--ink); line-height: 1;
+  margin-bottom: 4px;
+}
+.stlbl { font-size: 0.75rem; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--ink);
+  color: rgba(245,240,232,0.7);
+  padding: 64px 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+footer::before {
+  content: 'NASCO';
+  position: absolute;
+  bottom: -20px; right: 40px;
+  font-family: 'Playfair Display', serif;
+  font-size: 9rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.03);
+  pointer-events: none;
+  letter-spacing: -4px;
+}
+
+.footer-inner {
+  max-width: 1280px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px; margin-bottom: 48px;
+}
+
+.footer-brand .logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem; font-weight: 900;
+  color: var(--cream); margin-bottom: 12px;
+}
+.footer-brand .logo span { color: var(--accent); }
+.footer-brand p { font-size: 0.88rem; line-height: 1.7; max-width: 260px; }
+
+.footer-col h4 {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px;
+  color: rgba(245,240,232,0.4); margin-bottom: 16px; font-weight: 500;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul li a { color: rgba(245,240,232,0.6); text-decoration: none; font-size: 0.88rem; transition: 0.15s; }
+.footer-col ul li a:hover { color: var(--cream); }
+
+.footer-bottom {
+  max-width: 1280px; margin: 0 auto;
+  padding-top: 28px; border-top: 1px solid rgba(245,240,232,0.08);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+.footer-bottom p { font-size: 0.8rem; color: rgba(245,240,232,0.3); }
+.footer-pills { display: flex; gap: 8px; }
+.footer-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 1px;
+  background: rgba(245,240,232,0.06);
+  color: rgba(245,240,232,0.4);
+  padding: 4px 12px; border-radius: 20px; text-transform: uppercase;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1080px) {
+  .hero { padding: 60px 32px 48px; gap: 48px; }
+  .wrapper { padding: 0 32px 80px; gap: 24px; }
+}
+
+@media (max-width: 960px) {
+  nav { padding: 0 24px; }
+  .hero { grid-template-columns: 1fr; gap: 40px; padding: 48px 24px 40px; }
+  .hero-visual { display: none; }
+  .wrapper { grid-template-columns: 1fr; padding: 0 24px 60px; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  footer { padding: 48px 24px 32px; }
+}
+
+@media (max-width: 600px) {
+  .nav-items { display: none; }
+  .hero h1 { font-size: 2.6rem; }
+  .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="logo">NASCO<span>.</span></div>
+    <span class="course-tag">CSC 1/4</span>
+  </div>
+  <div class="nav-items">
+    <a href="#home" class="active" data-section="home">Home</a>
+    <a href="#announcements" data-section="announcements">Announcements</a>
+    <a href="#reps" data-section="reps">Class Reps</a>
+    <a href="#schedule" data-section="schedule">Schedule</a>
+  </div>
+</nav>
+
+<div id="main-view">
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="hero-eyebrow">CSC 2025 · Active Semester</div>
+    <h1>UNICROSS<br><em>Computer Science</em></h1>
+    <p class="hero-subtitle">Your gateway to programming, computational thinking, and building the digital future.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num">398</div><div class="hstat-lbl">Students</div></div>
+      <div class="hstat"><div class="hstat-num">7</div><div class="hstat-lbl">Courses</div></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="visual-label">Next Lecture</div>
+    <div class="visual-time">8:00</div>
+    <div class="visual-day">Wednesday morning</div>
+    <div class="visual-next">
+      <div class="visual-next-label">COS 101 · Main Hall</div>
+      <div class="visual-next-title">Intro to Computer Science</div>
+      <div class="visual-next-time">Wed, 8:00 AM – 10:00 AM</div>
+    </div>
+    <div class="visual-next" style="opacity:0.6">
+      <div class="visual-next-label">MTH 101 · Room 204</div>
+      <div class="visual-next-title">Mathematics I</div>
+      <div class="visual-next-time">Thu, 10:00 AM – 12:00 PM</div>
+    </div>
+    <span class="semester-pill">Spring 2025</span>
+  </div>
+</section>
+
+<!-- MAIN CONTENT — correct 2-column grid -->
+<div class="wrapper">
+
+  <!-- ── LEFT COLUMN ── -->
+  <div class="left-col">
+
+    <!-- COURSE SCHEDULE -->
+    <div class="card" id="schedule" style="animation: fadeUp 0.6s 0.3s ease both;">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon">📚</div>
+          <h2>Course Schedule</h2>
+        </div>
+        <span class="card-badge teal">7 courses</span>
+      </div>
+
+      <!-- DAY FILTER BAR -->
+      <div class="filter-bar">
+        <button class="filter-btn active" data-day="all">All</button>
+        <button class="filter-btn" data-day="MON">Mon</button>
+        <button class="filter-btn" data-day="TUE">Tue</button>
+        <button class="filter-btn" data-day="WED">Wed</button>
+        <button class="filter-btn" data-day="THU">Thu</button>
+        <button class="filter-btn" data-day="FRI">Fri</button>
+      </div>
+      <div class="courses-body">
+
+        <div class="course-card" data-days="MON THU">
+          <div class="course-stripe" style="background:#3498db"></div>
+          <div class="course-info">
+            <div class="course-code">MTH 101</div>
+            <div class="course-name">Mathematics I — Algebra & Calculus</div>
+          </div>
+          <div class="course-right">
+            <div class="course-days-wrap"><span class="course-day">MON</span><span class="course-day">THU</span></div>
+            <div class="course-time">10:00 – 12:00 PM</div>
+            <div class="course-venue">📍 Room 204, Block B</div>
+          </div>
+        </div>
+
+        <div class="course-card" data-days="TUE FRI">
+          <div class="course-stripe" style="background:#e67e22"></div>
+          <div class="course-info">
+            <div class="course-code">PHY 101</div>
+            <div class="course-name">Physics I — Mechanics & Waves</div>
+          </div>
+          <div class="course-right">
+            <div class="course-days-wrap"><span class="course-day">TUE</span><span class="course-day">FRI</span></div>
+            <div class="course-time">8:00 – 10:00 AM</div>
+            <div class="course-venue">📍 Physics Hall, Block C</div>
+          </div>
+        </div>
+
+        <div class="course-card" data-days="WED">
+          <div class="course-stripe" style="background:#c8492a"></div>
+          <div class="course-info">
+            <div class="course-code">COS 101</div>
+            <div class="course-name">Introduction to Computer Science</div>
+          </div>
+          <div class="course-right">
+            <div class="course-days-wrap"><span class="course-day">WED</span></div>
+            <div class="course-time">8:00 – 10:00 AM</div>
+            <div class="course-venue">📍 Main Hall, Block A</div>
+          </div>
+        </div>
+
+        <div class="course-card" data-days="TUE">
+          <div class="course-stripe" style="background:#9b59b6"></div>
+          <div class="course-info">
+            <div class="course-code">CSC 181</div>
+            <div class="course-name">Computer Science Laboratory</div>
+          </div>
+          <div class="course-right">
+            <div class="course-days-wrap"><span class="course-day">TUE</span></div>
+            <div class="course-time">2:00 – 4:00 PM</div>
+            <div class="course-venue">📍 Lab A, ICT Centre</div>
+          </div>
+        </div>
+
+        <div class="course-card" data-days="MON WED">
+          <div class="course-stripe" style="background:#e74c3c"></div>
+          <div class="course-info">
+            <div class="course-code">STA 111</div>
+            <div class="course-name">Introduction to Statistics</div>
+          </div>
+          <div class="course-right">
+            <div class="course-days-wrap"><span class="course-day">MON</span><span class="course-day">WED</span></div>
+            <div class="course-time">12:00 – 2:00 PM</div>
+            <div class="course-venue">📍 Room 301, Block D</div>
+          </div>
+        </div>
+
+        <div class="course-card" data-days="FRI">
+          <div class="course-stripe" style="background:#d4a017"></div>
+          <div class="course-info">
+            <div class="course-code">PHY 107</div>
+            <div class="course-name">Physics Lab — Practical Sessions</div>
+          </div>
+          <div class="course-right">
+            <div class="course-days-wrap"><span class="course-day">FRI</span></div>
+            <div class="course-time">10:00 AM – 1:00 PM</div>
+            <div class="course-venue">📍 Physics Lab, Block C</div>
+          </div>
+        </div>
+
+        <div class="course-card" data-days="THU">
+          <div class="course-stripe" style="background:#1abc9c"></div>
+          <div class="course-info">
+            <div class="course-code">GST 111</div>
+            <div class="course-name">Communication in English</div>
+          </div>
+          <div class="course-right">
+            <div class="course-days-wrap"><span class="course-day">THU</span></div>
+            <div class="course-time">2:00 – 4:00 PM</div>
+            <div class="course-venue">📍 Arts Hall, Block E</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div class="card" id="announcements" style="animation: fadeUp 0.6s 0.2s ease both;">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon">📢</div>
+          <h2>Announcements</h2>
+        </div>
+        <span class="card-badge" id="ann-badge">3 New</span>
+      </div>
+      <div class="announcements-body">
+
+        <div class="ann-item pinned" data-id="ann1">
+          <div class="ann-avatar red">Dr</div>
+          <div class="ann-body">
+            <div class="ann-top">
+              <div class="ann-title-row">
+                <span class="ann-title">Mid-Semester Exam Schedule Released</span>
+                <span class="ann-pin">📌 Pinned</span>
+              </div>
+              <div class="ann-actions">
+                <span class="ann-date">Feb 14, 2025</span>
+                <button class="ann-btn read-btn" title="Mark as read">✓ Read</button>
+                <button class="ann-btn dismiss-btn" title="Dismiss">✕</button>
+              </div>
+            </div>
+            <p class="ann-text">The mid-semester examination timetable has been published. COS 101 will be examined on March 5th, 2025 at 10:00 AM in the Main Auditorium. Please arrive 15 minutes early with your student ID.</p>
+            <div class="ann-meta">
+              <span class="ann-tag">📍 Main Auditorium</span>
+              <span class="ann-tag">📅 March 5</span>
+              <span class="ann-tag">🔴 Important</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ann-item" data-id="ann2">
+          <div class="ann-avatar teal">CR</div>
+          <div class="ann-body">
+            <div class="ann-top">
+              <div class="ann-title-row"><span class="ann-title">Assignment 2 — Submission Reminder</span></div>
+              <div class="ann-actions">
+                <span class="ann-date">Feb 10, 2025</span>
+                <button class="ann-btn read-btn" title="Mark as read">✓ Read</button>
+                <button class="ann-btn dismiss-btn" title="Dismiss">✕</button>
+              </div>
+            </div>
+            <p class="ann-text">Assignment 2 on flowcharts and pseudocode is due this Friday, Feb 14th by 11:59 PM. Submit via the portal. Late submissions will incur a 10% penalty per day.</p>
+            <div class="ann-meta">
+              <span class="ann-tag">📝 Assignment</span>
+              <span class="ann-tag">⏰ Due Friday</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ann-item" data-id="ann3">
+          <div class="ann-avatar gold">Dr</div>
+          <div class="ann-body">
+            <div class="ann-top">
+              <div class="ann-title-row"><span class="ann-title">Lab Session Rescheduled</span></div>
+              <div class="ann-actions">
+                <span class="ann-date">Feb 8, 2025</span>
+                <button class="ann-btn read-btn" title="Mark as read">✓ Read</button>
+                <button class="ann-btn dismiss-btn" title="Dismiss">✕</button>
+              </div>
+            </div>
+            <p class="ann-text">The Tuesday lab session (CSC 181) for next week has been moved to Thursday 2:00 PM – 4:00 PM due to infrastructure maintenance in Lab A. Location remains the same.</p>
+            <div class="ann-meta">
+              <span class="ann-tag">🔄 Rescheduled</span>
+              <span class="ann-tag">📍 Lab A</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- end .left-col -->
+
+  <!-- ── RIGHT COLUMN ── -->
+  <div class="right-col">
+
+    <!-- OVERVIEW / QUICK STATS -->
+    <div class="card" style="animation: fadeUp 0.6s 0.25s ease both;">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon">📊</div>
+          <h2>Overview</h2>
+        </div>
+      </div>
+      <div class="stats-body">
+        <div class="stats-grid">
+          <div class="stat-tile">
+            <div class="stnum">398</div>
+            <div class="stlbl">Students</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stnum">7</div>
+            <div class="stlbl">Courses</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stnum">1/4</div>
+            <div class="stlbl">Years</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stnum">1/2</div>
+            <div class="stlbl">Semester</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLASS REPS -->
+    <div class="card" id="reps" style="animation: fadeUp 0.6s 0.35s ease both;">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon">👥</div>
+          <h2>Class Reps</h2>
+        </div>
+      </div>
+      <div class="reps-body">
+        <div class="rep-card">
+          <div class="rep-avatar">ME</div>
+          <div class="rep-info-col">
+            <div class="rep-role">Class Representative</div>
+            <div class="rep-name">A. Monday Ebge</div>
+            <div class="rep-reg">25/CSC/009</div>
+          </div>
+        </div>
+        <div class="rep-card">
+          <div class="rep-avatar female">EP</div>
+          <div class="rep-info-col">
+            <div class="rep-role">Assistant Rep</div>
+            <div class="rep-name">A.E. Peace</div>
+            <div class="rep-reg">25/CSC/090</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPCOMING EVENTS -->
+    <div class="card" style="animation: fadeUp 0.6s 0.45s ease both;">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon">📅</div>
+          <h2>Upcoming</h2>
+        </div>
+        <span class="card-badge gold">4 events</span>
+      </div>
+      <div class="events-body">
+
+        <div class="event-row">
+          <div class="event-cal"><div class="eday">14</div><div class="emon">Feb</div></div>
+          <div class="event-info">
+            <div class="event-title">Assignment 2 Due</div>
+            <p class="event-desc">Flowcharts & pseudocode — 11:59 PM</p>
+            <span class="event-chip assign">Assignment</span>
+          </div>
+        </div>
+
+        <div class="event-row">
+          <div class="event-cal" style="background:var(--gold); color:var(--ink)"><div class="eday">21</div><div class="emon">Feb</div></div>
+          <div class="event-info">
+            <div class="event-title">MTH 101 Class Test</div>
+            <p class="event-desc">Chapters 1–4 · Room 204</p>
+            <span class="event-chip test">Test</span>
+          </div>
+        </div>
+
+        <div class="event-row">
+          <div class="event-cal" style="background:var(--accent)"><div class="eday">05</div><div class="emon">Mar</div></div>
+          <div class="event-info">
+            <div class="event-title">Mid-Semester Exam</div>
+            <p class="event-desc">COS 101 · Main Auditorium · 10 AM</p>
+            <span class="event-chip exam">Exam</span>
+          </div>
+        </div>
+
+        <div class="event-row">
+          <div class="event-cal"><div class="eday">12</div><div class="emon">Mar</div></div>
+          <div class="event-info">
+            <div class="event-title">Lab Project Submission</div>
+            <p class="event-desc">CSC 181 Group project</p>
+            <span class="event-chip assign">Project</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- end .right-col -->
+
+</div><!-- end .wrapper -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">NASCO<span>.</span></div>
+      <p>The student portal for CSC — Computer Science, CLASS of 2025.<br>Connecting students, schedules, and resources in one place.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Portal</h4>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Announcements</a></li>
+        <li><a href="#">Schedule</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Courses</h4>
+      <ul>
+        <li><a href="#">COS 101</a></li>
+        <li><a href="#">MTH 101</a></li>
+        <li><a href="#">PHY 101</a></li>
+        <li><a href="#">CSC 181</a></li>
+        <li><a href="#">GST 111</a></li>
+        <li><a href="#">PHY 107</a></li>
+        <li><a href="#">STA 111</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Contact Reps</a></li>
+        <li><a href="#">Report Issue</a></li>
+        <li><a href="#">Academic Calendar</a></li>
+        <li><a href="#">Student Handbook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 CSC BSC 1/4 Class Portal | Designed by Nworah, C.J</p>
+    <div class="footer-pills">
+      <span class="footer-pill">v2.0</span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- end #main-view -->
+
+<!-- ── ANNOUNCEMENT DETAIL PAGE ── -->
+<div id="ann-detail-page">
+  <div class="detail-hero">
+    <button class="back-btn" id="ann-back-btn">← Back to Portal</button>
+    <div class="detail-header">
+      <div class="detail-stripe" id="ann-detail-stripe"></div>
+      <div>
+        <div class="detail-code" id="ann-detail-title" style="font-size:clamp(1.6rem,3vw,2.6rem);letter-spacing:-0.5px;"></div>
+        <div class="detail-name" id="ann-detail-meta"></div>
+        <div class="detail-pills" id="ann-detail-pills"></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-body" style="grid-template-columns:1fr 300px;">
+    <div class="detail-left">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">📢</div><h2>Full Announcement</h2></div>
+        </div>
+        <div style="padding:24px 32px;" id="ann-detail-body"></div>
+      </div>
+    </div>
+    <div class="detail-right">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">📋</div><h2>Details</h2></div>
+        </div>
+        <div style="padding:8px 28px 20px;" id="ann-detail-info"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── REP PROFILE PAGE ── -->
+<div id="rep-detail-page">
+  <div class="detail-hero">
+    <button class="back-btn" id="rep-back-btn">← Back to Portal</button>
+    <div class="detail-header" style="align-items:center;">
+      <div class="rep-profile-avatar" id="rep-detail-avatar"></div>
+      <div>
+        <div class="detail-code" id="rep-detail-name" style="font-size:clamp(1.8rem,3vw,3rem);letter-spacing:-0.5px;"></div>
+        <div class="detail-name" id="rep-detail-role"></div>
+        <div class="detail-pills" id="rep-detail-pills"></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-body" style="grid-template-columns:1fr 300px;">
+    <div class="detail-left">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">👤</div><h2>Profile</h2></div>
+        </div>
+        <div style="padding:8px 32px 20px;" id="rep-detail-profile"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">📋</div><h2>Responsibilities</h2></div>
+        </div>
+        <div style="padding:8px 32px 20px;" id="rep-detail-duties"></div>
+      </div>
+    </div>
+    <div class="detail-right">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">📞</div><h2>Contact</h2></div>
+        </div>
+        <div style="padding:8px 28px 20px;" id="rep-detail-contact"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">📊</div><h2>Quick Stats</h2></div>
+        </div>
+        <div style="padding:16px 28px 20px;" id="rep-detail-stats"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER BAR CSS -->
+<style>
+/* ── FILTER BAR ── */
+.filter-bar {
+  padding: 16px 32px 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--cream);
+  color: var(--ink-light);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover { background: var(--cream-dark); color: var(--ink); }
+.filter-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+/* ── COURSE CARD HIDDEN STATE ── */
+.course-card.hidden {
+  display: none;
+}
+
+/* ── ANNOUNCEMENT BUTTONS ── */
+.ann-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.ann-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: transparent;
+  color: var(--ink-light);
+}
+.ann-btn:hover { background: var(--cream-dark); color: var(--ink); }
+.dismiss-btn:hover { background: rgba(200,73,42,0.1); color: var(--accent); border-color: var(--accent); }
+.read-btn:hover { background: var(--teal-light); color: var(--teal); border-color: var(--teal); }
+
+/* ── ANN READ STATE ── */
+.ann-item.is-read {
+  opacity: 0.5;
+}
+.ann-item.is-read .ann-title {
+  text-decoration: line-through;
+}
+
+/* ── ANN DISMISS ANIMATION ── */
+.ann-item.dismissing {
+  animation: slideOut 0.3s ease forwards;
+  overflow: hidden;
+}
+@keyframes slideOut {
+  to { opacity: 0; max-height: 0; padding: 0; margin: 0; border-width: 0; }
+}
+
+/* ── TOAST ── */
+#toast-container {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 14px 20px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(26,18,8,0.25);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 260px;
+  max-width: 340px;
+  pointer-events: all;
+  animation: toastIn 0.3s ease both;
+  border-left: 4px solid var(--accent);
+}
+.toast.toast-success { border-left-color: var(--teal); }
+.toast.toast-warning { border-left-color: var(--gold); }
+.toast.toast-exit { animation: toastOut 0.3s ease forwards; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(16px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toastOut { to { opacity: 0; transform: translateY(8px) scale(0.95); } }
+.toast-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+/* ── COURSE DETAIL PAGE ── */
+#course-detail-page {
+  display: none;
+  min-height: 100vh;
+  animation: fadeUp 0.35s ease both;
+}
+#course-detail-page.active { display: block; }
+
+.detail-hero {
+  padding: 48px 48px 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-light);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 32px;
+  letter-spacing: 0.5px;
+}
+.back-btn:hover { background: var(--ink); color: var(--cream); }
+
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.detail-stripe {
+  width: 8px;
+  height: 80px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.detail-code {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -1px;
+}
+.detail-name {
+  font-size: 1.1rem;
+  color: var(--ink-light);
+  margin-top: 6px;
+  font-weight: 300;
+}
+.detail-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.detail-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 4px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+.detail-pill.accent { background: var(--accent); }
+.detail-pill.teal { background: var(--teal); }
+.detail-pill.gold { background: var(--gold); color: var(--ink); }
+
+/* detail body grid */
+.detail-body {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 48px 80px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 28px;
+}
+.detail-left { display: flex; flex-direction: column; gap: 24px; }
+.detail-right { display: flex; flex-direction: column; gap: 24px; }
+
+/* info rows inside detail cards */
+.dinfo-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+}
+.dinfo-row:last-child { border-bottom: none; }
+.dinfo-label { color: var(--ink-light); font-size: 0.82rem; }
+.dinfo-val { font-weight: 600; color: var(--ink); text-align: right; }
+
+/* topic list */
+.topic-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.topic-item:last-child { border-bottom: none; }
+.topic-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  background: var(--ink);
+  color: var(--cream);
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.topic-title { font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.topic-weeks { font-size: 0.78rem; color: var(--ink-light); }
+
+/* assignment rows */
+.assign-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.assign-row:last-child { border-bottom: none; }
+.assign-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.assign-info { flex: 1; }
+.assign-title { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+.assign-due { font-size: 0.78rem; color: var(--ink-light); margin-top: 2px; }
+.assign-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.status-pending { background: rgba(212,160,23,0.15); color: #a07010; }
+.status-done { background: var(--teal-light); color: var(--teal); }
+.status-upcoming { background: rgba(200,73,42,0.1); color: var(--accent); }
+
+/* ── ANN & REP DETAIL PAGES ── */
+#ann-detail-page, #rep-detail-page {
+  display: none;
+  min-height: 100vh;
+  animation: fadeUp 0.35s ease both;
+}
+#ann-detail-page.active, #rep-detail-page.active { display: block; }
+
+.ann-detail-full {
+  font-size: 1rem;
+  color: var(--ink-mid);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.ann-detail-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+.ann-detail-tag {
+  font-size: 0.82rem;
+  color: var(--ink-light);
+  background: var(--cream-dark);
+  padding: 5px 14px;
+  border-radius: 20px;
+}
+
+/* clickable ann items */
+.ann-item { cursor: pointer; }
+.ann-item:hover { transform: translateX(4px); }
+
+/* rep profile avatar large */
+.rep-profile-avatar {
+  width: 88px; height: 88px;
+  border-radius: 20px;
+  display: grid; place-items: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; font-size: 2rem;
+  color: var(--cream);
+  flex-shrink: 0;
+}
+
+/* rep duties list */
+.duty-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.duty-item:last-child { border-bottom: none; }
+.duty-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.duty-text { color: var(--ink-mid); line-height: 1.6; }
+
+/* rep stat mini tiles */
+.rep-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rep-stat-tile {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+}
+.rep-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem; font-weight: 900;
+  color: var(--ink); line-height: 1;
+  margin-bottom: 3px;
+}
+.rep-stat-lbl { font-size: 0.68rem; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.5px; }
+
+@media (max-width: 960px) {
+  .detail-hero { padding: 32px 24px 24px; }
+  .detail-body { grid-template-columns: 1fr !important; padding: 0 24px 60px; }
+}
+</style>
+
+<!-- ── COURSE DETAIL PAGE ── -->
+<div id="course-detail-page">
+  <div class="detail-hero">
+    <button class="back-btn" id="back-btn">← Back to Portal</button>
+    <div class="detail-header">
+      <div class="detail-stripe" id="detail-stripe"></div>
+      <div>
+        <div class="detail-code" id="detail-code"></div>
+        <div class="detail-name" id="detail-name"></div>
+        <div class="detail-pills" id="detail-pills"></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="detail-left">
+
+      <!-- COURSE INFO -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">📋</div><h2>Course Info</h2></div>
+        </div>
+        <div style="padding: 8px 32px 20px;" id="detail-info"></div>
+      </div>
+
+      <!-- COURSE TOPICS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">📖</div><h2>Course Topics</h2></div>
+          <span class="card-badge teal" id="detail-topics-count"></span>
+        </div>
+        <div style="padding: 8px 32px 20px;" id="detail-topics"></div>
+      </div>
+
+    </div>
+    <div class="detail-right">
+
+      <!-- LECTURER -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">👨‍🏫</div><h2>Lecturer</h2></div>
+        </div>
+        <div style="padding: 20px 28px;" id="detail-lecturer"></div>
+      </div>
+
+      <!-- ASSIGNMENTS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon">📝</div><h2>Assignments</h2></div>
+          <span class="card-badge" id="detail-assign-count"></span>
+        </div>
+        <div style="padding: 8px 28px 16px;" id="detail-assignments"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ── COURSE DATA ──
+const COURSES = {
+  'mth101': {
+    code: 'MTH 101', name: 'Mathematics I — Algebra & Calculus',
+    color: '#3498db', days: 'MON · THU', time: '10:00 – 12:00 PM',
+    venue: 'Room 204, Block B', units: 3, semester: '1st Semester',
+    lecturer: { name: 'Dr. Adamu Bello', dept: 'Mathematics Dept.', email: 'a.bello@unicross.edu.ng', office: 'Block B, Room 12' },
+    topics: [
+      { title: 'Number Systems & Sets', weeks: 'Week 1–2' },
+      { title: 'Algebra & Polynomials', weeks: 'Week 3–4' },
+      { title: 'Trigonometry', weeks: 'Week 5–6' },
+      { title: 'Limits & Continuity', weeks: 'Week 7–8' },
+      { title: 'Differentiation', weeks: 'Week 9–10' },
+      { title: 'Integration', weeks: 'Week 11–12' },
+    ],
+    assignments: [
+      { title: 'Assignment 1 — Number Sets', due: 'Jan 31, 2025', status: 'done' },
+      { title: 'Assignment 2 — Algebra', due: 'Feb 21, 2025', status: 'pending' },
+      { title: 'Mid-Semester Test', due: 'Mar 5, 2025', status: 'upcoming' },
+    ]
+  },
+  'phy101': {
+    code: 'PHY 101', name: 'Physics I — Mechanics & Waves',
+    color: '#e67e22', days: 'TUE · FRI', time: '8:00 – 10:00 AM',
+    venue: 'NSB 3', units: 3, semester: '1st Semester',
+    lecturer: { name: 'Multiple Lecturers', dept: 'Physics Dept.', email: 'physics@unicross.edu.ng', office: 'Block C' },
+    topics: [
+      { title: 'Space and time. Units and dimension.', weeks: 'Dr. A.A Abong' },
+      { title: 'Newton laws of motion (Inertial frames, Impulse, Force and action at a distance, Momentum Conservation).', weeks: 'Dr. K.A.F' },
+      { title: 'Conservation Principles in Physics, Conservative Forces, Conservation of Linear Momentum, Kinetic Energy and Work.', weeks: 'Dr. P.O.U' },
+      { title: 'Potential energy, System of particles, Centre of mass, Rotational motion, Torque, Vector product, Moment, Rotation of coordinate axes and angular momentum.', weeks: 'Dr. N.A.A' },
+      { title: 'Vectors and Scalars, Differentiation of Vectors: Displacement, Velocity and Acceleration.', weeks: 'Dr. U.Z.A' },
+      { title: 'Polar Coordinates, Conservation of Angular Momentum; Circular Motion. Moments of Inertia.', weeks: 'Dr. N.J.O.K' },
+      { title: 'Gyroscopes and Precession, Gravitation: Newton\'s Law of Gravitation, Kepler\'s Laws of Planetary Motion.', weeks: 'Dr. Osang' },
+      { title: 'Gravitational Potential Energy, Escape velocity, Satellites motion and orbits.', weeks: 'EZE' },
+      { title: 'Relative motion, Application of Newtonian mechanics, Equations of Motion.', weeks: 'Dr. EKAH' },
+    ],
+    assignments: [
+      { title: 'Lab Report 1 — Measurements', due: 'Feb 7, 2025', status: 'done' },
+      { title: 'Assignment 1 — Kinematics', due: 'Feb 28, 2025', status: 'pending' },
+    ]
+  },
+  'cos101': {
+    code: 'COS 101', name: 'Introduction to Computer Science',
+    color: '#c8492a', days: 'WED', time: '8:00 – 10:00 AM',
+    venue: 'Main Hall, Block A', units: 2, semester: '1st Semester',
+    lecturer: { name: 'Dr. Emeka Okonkwo', dept: 'Computer Science Dept.', email: 'e.okonkwo@unicross.edu.ng', office: 'ICT Centre, Room 3' },
+    topics: [
+      { title: 'History of Computing', weeks: 'Week 1' },
+      { title: 'Computer Hardware', weeks: 'Week 2–3' },
+      { title: 'Number Systems', weeks: 'Week 4' },
+      { title: 'Algorithms & Flowcharts', weeks: 'Week 5–6' },
+      { title: 'Intro to Programming', weeks: 'Week 7–9' },
+      { title: 'Operating Systems', weeks: 'Week 10–11' },
+      { title: 'Internet & Networks', weeks: 'Week 12' },
+    ],
+    assignments: [
+      { title: 'Assignment 1 — History of Computing', due: 'Jan 29, 2025', status: 'done' },
+      { title: 'Assignment 2 — Flowcharts', due: 'Feb 14, 2025', status: 'pending' },
+      { title: 'Mid-Semester Exam', due: 'Mar 5, 2025', status: 'upcoming' },
+    ]
+  },
+  'csc181': {
+    code: 'CSC 181', name: 'Computer Science Laboratory',
+    color: '#9b59b6', days: 'TUE', time: '2:00 – 4:00 PM',
+    venue: 'Lab A, ICT Centre', units: 1, semester: '1st Semester',
+    lecturer: { name: 'Mr. Chidi Eze', dept: 'Computer Science Dept.', email: 'c.eze@unicross.edu.ng', office: 'ICT Centre, Room 7' },
+    topics: [
+      { title: 'Intro to Linux & Terminal', weeks: 'Week 1–2' },
+      { title: 'Basic Programming in Python', weeks: 'Week 3–5' },
+      { title: 'Data Types & Variables', weeks: 'Week 6–7' },
+      { title: 'Control Flow & Loops', weeks: 'Week 8–9' },
+      { title: 'Functions & Modules', weeks: 'Week 10–11' },
+      { title: 'Group Project', weeks: 'Week 12–13' },
+    ],
+    assignments: [
+      { title: 'Lab 1 — Linux Commands', due: 'Feb 4, 2025', status: 'done' },
+      { title: 'Lab 2 — Python Basics', due: 'Feb 18, 2025', status: 'pending' },
+      { title: 'Group Project Submission', due: 'Mar 12, 2025', status: 'upcoming' },
+    ]
+  },
+  'sta111': {
+    code: 'STA 111', name: 'Introduction to Statistics',
+    color: '#e74c3c', days: 'MON · WED', time: '12:00 – 2:00 PM',
+    venue: 'Room 301, Block D', units: 3, semester: '1st Semester',
+    lecturer: { name: 'Dr. Funke Adeleke', dept: 'Statistics Dept.', email: 'f.adeleke@unicross.edu.ng', office: 'Block D, Room 8' },
+    topics: [
+      { title: 'Introduction to Data', weeks: 'Week 1' },
+      { title: 'Frequency Distributions', weeks: 'Week 2–3' },
+      { title: 'Measures of Central Tendency', weeks: 'Week 4–5' },
+      { title: 'Probability Theory', weeks: 'Week 6–8' },
+      { title: 'Random Variables', weeks: 'Week 9–10' },
+      { title: 'Statistical Inference', weeks: 'Week 11–12' },
+    ],
+    assignments: [
+      { title: 'Assignment 1 — Frequency Tables', due: 'Feb 3, 2025', status: 'done' },
+      { title: 'Assignment 2 — Probability', due: 'Mar 3, 2025', status: 'upcoming' },
+    ]
+  },
+  'phy107': {
+    code: 'PHY 107', name: 'Physics Lab — Practical Sessions',
+    color: '#d4a017', days: 'FRI', time: '10:00 AM – 1:00 PM',
+    venue: 'Physics Lab', units: 1, semester: '1st Semester',
+    lecturer: { name: 'Dr. Taiwo Olatunji', dept: 'Physics Dept.' },
+    topics: [
+      { title: 'Experiment 37 — Simple Pendulum' },
+      { title: 'Experiment 2 — Hooke\'s Law', weeks: 'Week 4' },
+      { title: 'Experiment 3 — Ohm\'s Law', weeks: 'Week 6' }
+    ],
+    assignments: [
+      { title: 'Lab Report 1 — Pendulum', due: 'Feb 10, 2025', status: 'done' },
+      { title: 'Lab Report 2 — Hooke\'s Law', due: 'Feb 24, 2025', status: 'pending' },
+    ]
+  },
+  'gst111': {
+    code: 'GST 111', name: 'Communication in English',
+    color: '#1abc9c', days: 'SAT', time: '7:00 – 9:00 AM',
+    venue: 'ETF', units: 2, semester: '1st Semester',
+    lecturer: { name: 'Mrs. M.I. Obot'},
+    topics: [
+      { title: 'Reading & Comprehension', weeks: 'Week 1–2' },
+      { title: 'Grammar & Usage', weeks: 'Week 3–4' },
+      { title: 'Academic Writing', weeks: 'Week 5–7' },
+      { title: 'Oral Communication', weeks: 'Week 8–9' },
+      { title: 'Report Writing', weeks: 'Week 10–11' },
+      { title: 'Presentation Skills', weeks: 'Week 12' },
+    ],
+    assignments: [
+      { title: 'Essay 1 — Personal Statement', due: 'Feb 6, 2025', status: 'done' },
+      { title: 'Essay 2 — Argumentative', due: 'Feb 27, 2025', status: 'pending' },
+    ]
+  }
+};
+
+// ── VIEWS ──
+const mainView = document.getElementById('main-view');
+const detailPage = document.getElementById('course-detail-page');
+
+function showMain() {
+  mainView.style.display = '';
+  detailPage.classList.remove('active');
+  document.getElementById('ann-detail-page')?.classList.remove('active');
+  document.getElementById('rep-detail-page')?.classList.remove('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.title = 'NASCO · CSC Portal';
+  history.pushState(null, '', '#home');
+}
+
+function showCourse(id) {
+  const c = COURSES[id];
+  if (!c) return;
+
+  // populate stripe & heading
+  document.getElementById('detail-stripe').style.background = c.color;
+  document.getElementById('detail-code').textContent = c.code;
+  document.getElementById('detail-name').textContent = c.name;
+
+  // pills
+  const pillsEl = document.getElementById('detail-pills');
+  pillsEl.innerHTML = `
+    <span class="detail-pill">${c.days}</span>
+    <span class="detail-pill accent">${c.time}</span>
+    <span class="detail-pill teal">📍 ${c.venue}</span>
+    <span class="detail-pill gold">${c.units} Units</span>
+  `;
+
+  // info rows
+  document.getElementById('detail-info').innerHTML = `
+    <div class="dinfo-row"><span class="dinfo-label">Course Code</span><span class="dinfo-val">${c.code}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Semester</span><span class="dinfo-val">${c.semester}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Credit Units</span><span class="dinfo-val">${c.units} Units</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Schedule</span><span class="dinfo-val">${c.days} · ${c.time}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Venue</span><span class="dinfo-val">${c.venue}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Total Topics</span><span class="dinfo-val">${c.topics.length} topics</span></div>
+  `;
+
+  // topics
+  document.getElementById('detail-topics-count').textContent = `${c.topics.length} topics`;
+  document.getElementById('detail-topics').innerHTML = c.topics.map((t, i) => `
+    <div class="topic-item">
+      <div class="topic-num">${i + 1}</div>
+      <div>
+        <div class="topic-title">${t.title}</div>
+        <div class="topic-weeks">${t.weeks}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // lecturer
+  const l = c.lecturer;
+  document.getElementById('detail-lecturer').innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+      <div style="width:56px;height:56px;border-radius:14px;background:var(--ink);display:grid;place-items:center;font-family:'Playfair Display',serif;font-weight:700;font-size:1.3rem;color:var(--cream);flex-shrink:0;">
+        ${l.name.split(' ').map(w => w[0]).slice(0,2).join('')}
+      </div>
+      <div>
+        <div style="font-weight:700;color:var(--ink);margin-bottom:3px;">${l.name}</div>
+        <div style="font-size:0.8rem;color:var(--ink-light);">${l.dept}</div>
+      </div>
+    </div>
+    <div class="dinfo-row"><span class="dinfo-label">Email</span><span class="dinfo-val" style="font-family:'DM Mono',monospace;font-size:0.75rem;">${l.email}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Office</span><span class="dinfo-val">${l.office}</span></div>
+  `;
+
+  // assignments
+  const statusMap = { done: 'status-done', pending: 'status-pending', upcoming: 'status-upcoming' };
+  const statusLabel = { done: '✓ Done', pending: '⏳ Pending', upcoming: '📌 Upcoming' };
+  document.getElementById('detail-assign-count').textContent = `${c.assignments.length}`;
+  document.getElementById('detail-assignments').innerHTML = c.assignments.map(a => `
+    <div class="assign-row">
+      <div class="assign-dot" style="background:${a.status === 'done' ? 'var(--teal)' : a.status === 'pending' ? 'var(--gold)' : 'var(--accent)'}"></div>
+      <div class="assign-info">
+        <div class="assign-title">${a.title}</div>
+        <div class="assign-due">Due: ${a.due}</div>
+      </div>
+      <span class="assign-status ${statusMap[a.status]}">${statusLabel[a.status]}</span>
+    </div>
+  `).join('');
+
+  // show detail page
+  mainView.style.display = 'none';
+  detailPage.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.title = `NASCO · ${c.code}`;
+  history.pushState({ course: id }, '', `#${id}`);
+  showToast(`📚 Opened ${c.code}`, 'info');
+}
+
+// ── BACK BUTTON ──
+document.getElementById('back-btn').addEventListener('click', showMain);
+window.addEventListener('popstate', e => {
+  if (e.state && e.state.course) showCourse(e.state.course);
+  else showMain();
+});
+
+// ── MAKE COURSE CARDS CLICKABLE ──
+const courseIdMap = {
+  'MTH 101': 'mth101', 'PHY 101': 'phy101', 'COS 101': 'cos101',
+  'CSC 181': 'csc181', 'STA 111': 'sta111', 'PHY 107': 'phy107', 'GST 111': 'gst111'
+};
+document.querySelectorAll('.course-card[data-days]').forEach(card => {
+  card.style.cursor = 'pointer';
+  const code = card.querySelector('.course-code')?.textContent?.trim();
+  const id = courseIdMap[code];
+  if (id) {
+    card.addEventListener('click', () => showCourse(id));
+  }
+});
+
+// ── 1. SMOOTH SCROLLING ──
+document.querySelectorAll('.nav-items a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    if (detailPage.classList.contains('active')) {
+      showMain();
+      setTimeout(() => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 350);
+    } else {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// ── 2. ACTIVE NAV ON SCROLL ──
+const sections = {
+  home: document.getElementById('home'),
+  schedule: document.getElementById('schedule'),
+  announcements: document.getElementById('announcements'),
+  reps: document.getElementById('reps'),
+};
+const navLinks = document.querySelectorAll('.nav-items a[data-section]');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.dataset.section === id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+Object.values(sections).forEach(el => { if (el) observer.observe(el); });
+
+// ── 3. COURSE FILTER BY DAY ──
+const filterBtns = document.querySelectorAll('.filter-btn');
+const courseCards = document.querySelectorAll('.course-card[data-days]');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const day = btn.dataset.day;
+    let visible = 0;
+    courseCards.forEach(card => {
+      const days = card.dataset.days || '';
+      const show = day === 'all' || days.includes(day);
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    showToast(day === 'all'
+      ? `📚 Showing all 7 courses`
+      : `📅 ${visible} course${visible !== 1 ? 's' : ''} on ${btn.textContent}`,
+      'info');
+  });
+});
+
+// ── 4. ANNOUNCEMENTS — MARK AS READ & DISMISS ──
+let unreadCount = document.querySelectorAll('.ann-item:not(.is-read)').length;
+
+function updateBadge() {
+  const badge = document.getElementById('ann-badge');
+  if (badge) {
+    badge.textContent = unreadCount > 0 ? `${unreadCount} New` : 'All Read';
+    badge.style.background = unreadCount > 0 ? '' : 'var(--teal)';
+  }
+}
+
+document.querySelectorAll('.read-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const item = btn.closest('.ann-item');
+    if (!item.classList.contains('is-read')) {
+      item.classList.add('is-read');
+      btn.textContent = '✓ Read';
+      unreadCount = Math.max(0, unreadCount - 1);
+      updateBadge();
+      showToast('✓ Marked as read', 'success');
+    }
+  });
+});
+
+document.querySelectorAll('.dismiss-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const item = btn.closest('.ann-item');
+    if (!item.classList.contains('is-read')) {
+      unreadCount = Math.max(0, unreadCount - 1);
+      updateBadge();
+    }
+    item.classList.add('dismissing');
+    item.addEventListener('animationend', () => item.remove(), { once: true });
+    showToast('🗑 Announcement dismissed', 'info');
+  });
+});
+
+// ── 5. TOAST NOTIFICATIONS ──
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const icons = { info: '💬', success: '✅', warning: '⚠️' };
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `<span class="toast-icon">${icons[type] || '💬'}</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('toast-exit');
+    toast.addEventListener('animationend', () => toast.remove(), { once: true });
+  }, 3000);
+}
+
+
+// ── ANNOUNCEMENT DATA ──
+const ANNOUNCEMENTS = {
+  ann1: {
+    title: 'Mid-Semester Exam Schedule Released',
+    date: 'February 14, 2025',
+    author: 'Dr. Emeka Okonkwo',
+    authorRole: 'Course Lecturer, COS 101',
+    avatarColor: 'var(--accent)',
+    initials: 'Dr',
+    stripeColor: 'var(--accent)',
+    tags: ['📍 Main Auditorium', '📅 March 5', '🔴 Important'],
+    category: 'Examination',
+    fullText: `The mid-semester examination timetable for the 2024/2025 academic session has been officially published by the Department of Computer Science.\n\nCOS 101 — Introduction to Computer Science will be examined on Wednesday, March 5th, 2025 at 10:00 AM in the Main Auditorium, Block A.\n\nAll students are required to:\n• Arrive at least 15 minutes before the exam begins\n• Bring a valid student ID card\n• Come with approved stationery only (no unauthorized materials)\n• Switch off all mobile devices before entering the hall\n\nStudents who fail to arrive within 30 minutes of the start time will not be allowed to sit the examination. Contact your class rep for further clarification.`,
+  },
+  ann2: {
+    title: 'Assignment 2 — Submission Reminder',
+    date: 'February 10, 2025',
+    author: 'A. Monday Ebge (Class Rep)',
+    authorRole: 'CSC 1/4 Class Representative',
+    avatarColor: 'var(--teal)',
+    initials: 'CR',
+    stripeColor: 'var(--teal)',
+    tags: ['📝 Assignment', '⏰ Due Friday'],
+    category: 'Assignment',
+    fullText: `This is a reminder that Assignment 2 for COS 101 — Introduction to Computer Science is due this Friday, February 14th, 2025 by 11:59 PM.\n\nThe assignment covers:\n• Flowcharts — draw a flowchart for at least 2 real-world problems\n• Pseudocode — write pseudocode for your solutions\n• Algorithm analysis — briefly explain the logic of each step\n\nSubmissions must be uploaded via the course portal in PDF format. Handwritten submissions will not be accepted.\n\nLate submissions will attract a 10% penalty per day. If you are experiencing any issues, contact the lecturer or the class rep immediately.`,
+  },
+  ann3: {
+    title: 'Lab Session Rescheduled',
+    date: 'February 8, 2025',
+    author: 'Mr. Chidi Eze',
+    authorRole: 'Lab Instructor, CSC 181',
+    avatarColor: 'var(--gold)',
+    initials: 'Dr',
+    stripeColor: 'var(--gold)',
+    tags: ['🔄 Rescheduled', '📍 Lab A'],
+    category: 'Schedule Change',
+    fullText: `Please be informed that the Tuesday lab session for CSC 181 — Computer Science Laboratory scheduled for next week has been rescheduled.\n\nNew Details:\n• Date: Thursday, February 20th, 2025\n• Time: 2:00 PM – 4:00 PM\n• Venue: Lab A, ICT Centre (unchanged)\n\nReason: Routine infrastructure maintenance and system upgrade in Lab A will take place on Tuesday, February 18th. All lab equipment will be unavailable during this period.\n\nStudents are expected to come with their lab notebooks and the completed pre-lab worksheet for Experiment 3 (Ohm's Law). Attendance is compulsory. If you cannot make the rescheduled time, notify the instructor at least 24 hours in advance.`,
+  },
+};
+
+// ── REP DATA ──
+const REPS = {
+  me: {
+    name: 'Agube, Monday Ebge',
+    role: 'Class Representative (001)',
+    initials: 'ME',
+    avatarColor: 'var(--ink)',
+    reg: '25/CSC/009',
+    dept: 'Computer Science',
+    level: '100 Level',
+    email: 'not avaliable',
+    phone: '+234 816 183 5614',
+    office: 'Available after lectures',
+    bio: 'Monday Ebge is the elected Class Representative for CSC 1/4, 2025 academic session. He serves as the primary liaison between the 398 students of the department and faculty staff, ensuring smooth communication and academic coordination throughout the semester.',
+    duties: [
+      'Serve as liaison between students and department staff',
+      'Communicate announcements, timetable changes and exam updates',
+      'Coordinate class activities, group assignments and study groups',
+      'Collect and submit class fees and levies on behalf of students',
+      'Represent students in departmental meetings and decisions',
+      'Maintain attendance records and course material distribution',
+    ],
+    stats: { students: 398, courses: 7, semester: '1/2', level: '1/4' },
+  },
+  ep: {
+    name: 'Emmanuel, Peace Arikpo',
+    role: 'Assistant Class Rep. (002)',
+    initials: 'EP',
+    avatarColor: 'var(--teal)',
+    reg: '25/CSC/090',
+    dept: 'Computer Science',
+    level: '100 Level',
+    email: 'not avaliable',
+    phone: '+234 814 360 3343',
+    office: 'Available during break hours',
+    bio: 'A.E. Peace serves as the Assistant Class Representative, supporting the class rep in all duties and stepping in whenever needed. She is particularly responsible for coordinating among female students and managing the class WhatsApp group and notice board updates.',
+    duties: [
+      'Support the class representative in all official duties',
+      'Manage the class WhatsApp group and social media updates',
+      'Coordinate female student welfare and concerns',
+      'Step in for the class rep in case of absence',
+      'Assist in exam material distribution and collection',
+      'Monitor and report student welfare issues to the rep',
+    ],
+    stats: { students: 398, courses: 7, semester: '1/2', level: '1/4' },
+  },
+};
+
+// ── PAGE REFERENCES ──
+const annDetailPage = document.getElementById('ann-detail-page');
+const repDetailPage = document.getElementById('rep-detail-page');
+
+// ── SHOW ANNOUNCEMENT DETAIL ──
+function showAnnouncement(id) {
+  const a = ANNOUNCEMENTS[id];
+  if (!a) return;
+
+  document.getElementById('ann-detail-stripe').style.background = a.stripeColor;
+  document.getElementById('ann-detail-title').textContent = a.title;
+  document.getElementById('ann-detail-meta').textContent = `By ${a.author} · ${a.date}`;
+
+  document.getElementById('ann-detail-pills').innerHTML = `
+    <span class="detail-pill accent">${a.category}</span>
+    <span class="detail-pill teal">${a.date}</span>
+  `;
+
+  document.getElementById('ann-detail-body').innerHTML = `
+    <p class="ann-detail-full">${a.fullText.replace(/\n/g, '<br>')}</p>
+    <div class="ann-detail-tags">
+      ${a.tags.map(t => `<span class="ann-detail-tag">${t}</span>`).join('')}
+    </div>
+  `;
+
+  document.getElementById('ann-detail-info').innerHTML = `
+    <div class="dinfo-row"><span class="dinfo-label">Posted By</span><span class="dinfo-val">${a.author}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Role</span><span class="dinfo-val">${a.authorRole}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Date</span><span class="dinfo-val">${a.date}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Category</span><span class="dinfo-val">${a.category}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Status</span><span class="dinfo-val" style="color:var(--teal);">Active</span></div>
+  `;
+
+  mainView.style.display = 'none';
+  annDetailPage.classList.add('active');
+  repDetailPage.classList.remove('active');
+  detailPage.classList.remove('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.title = `NASCO · ${a.title}`;
+  history.pushState({ ann: id }, '', `#${id}`);
+  showToast(`📢 Opened announcement`, 'info');
+}
+
+// ── SHOW REP PROFILE ──
+function showRep(id) {
+  const r = REPS[id];
+  if (!r) return;
+
+  document.getElementById('rep-detail-avatar').textContent = r.initials;
+  document.getElementById('rep-detail-avatar').style.background = r.avatarColor;
+  document.getElementById('rep-detail-name').textContent = r.name;
+  document.getElementById('rep-detail-role').textContent = r.role;
+
+  document.getElementById('rep-detail-pills').innerHTML = `
+    <span class="detail-pill">${r.reg}</span>
+    <span class="detail-pill teal">${r.dept}</span>
+    <span class="detail-pill gold">${r.level}</span>
+  `;
+
+  document.getElementById('rep-detail-profile').innerHTML = `
+    <div class="dinfo-row"><span class="dinfo-label">Full Name</span><span class="dinfo-val">${r.name}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Reg. Number</span><span class="dinfo-val" style="font-family:'DM Mono',monospace;font-size:0.82rem;">${r.reg}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Department</span><span class="dinfo-val">${r.dept}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Level</span><span class="dinfo-val">${r.level}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">Role</span><span class="dinfo-val">${r.role}</span></div>
+    <div style="margin-top:20px;padding:18px;background:var(--cream);border-radius:12px;border:1px solid var(--border);">
+      <p style="font-size:0.9rem;color:var(--ink-mid);line-height:1.75;">${r.bio}</p>
+    </div>
+  `;
+
+  document.getElementById('rep-detail-duties').innerHTML = r.duties.map(d => `
+    <div class="duty-item">
+      <div class="duty-dot"></div>
+      <div class="duty-text">${d}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('rep-detail-contact').innerHTML = `
+    <div class="dinfo-row"><span class="dinfo-label">📧 Email</span><span class="dinfo-val" style="font-family:'DM Mono',monospace;font-size:0.72rem;">${r.email}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">📱 Phone</span><span class="dinfo-val">${r.phone}</span></div>
+    <div class="dinfo-row"><span class="dinfo-label">🏠 Availability</span><span class="dinfo-val">${r.office}</span></div>
+  `;
+
+  document.getElementById('rep-detail-stats').innerHTML = `
+    <div class="rep-stats-grid">
+      <div class="rep-stat-tile"><div class="rep-stat-num">${r.stats.students}</div><div class="rep-stat-lbl">Students</div></div>
+      <div class="rep-stat-tile"><div class="rep-stat-num">${r.stats.courses}</div><div class="rep-stat-lbl">Courses</div></div>
+      <div class="rep-stat-tile"><div class="rep-stat-num">${r.stats.semester}</div><div class="rep-stat-lbl">Semester</div></div>
+      <div class="rep-stat-tile"><div class="rep-stat-num">${r.stats.level}</div><div class="rep-stat-lbl">Year</div></div>
+    </div>
+  `;
+
+  mainView.style.display = 'none';
+  repDetailPage.classList.add('active');
+  annDetailPage.classList.remove('active');
+  detailPage.classList.remove('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.title = `NASCO · ${r.name}`;
+  history.pushState({ rep: id }, '', `#${id}`);
+  showToast(`👤 Opened ${r.name}'s profile`, 'info');
+}
+
+// ── BACK BUTTONS FOR NEW PAGES ──
+document.getElementById('ann-back-btn').addEventListener('click', () => {
+  annDetailPage.classList.remove('active');
+  showMain();
+});
+document.getElementById('rep-back-btn').addEventListener('click', () => {
+  repDetailPage.classList.remove('active');
+  showMain();
+});
+
+// ── UPDATE POPSTATE TO HANDLE ALL PAGES ──
+window.addEventListener('popstate', e => {
+  if (e.state?.course) showCourse(e.state.course);
+  else if (e.state?.ann) showAnnouncement(e.state.ann);
+  else if (e.state?.rep) showRep(e.state.rep);
+  else showMain();
+});
+
+// ── MAKE ANNOUNCEMENT ITEMS CLICKABLE ──
+const annIdMap = { ann1: 'ann1', ann2: 'ann2', ann3: 'ann3' };
+document.querySelectorAll('.ann-item[data-id]').forEach(item => {
+  item.addEventListener('click', e => {
+    if (e.target.classList.contains('ann-btn')) return; // ignore read/dismiss btns
+    const id = item.dataset.id;
+    if (annIdMap[id]) showAnnouncement(id);
+  });
+});
+
+// ── MAKE REP CARDS CLICKABLE ──
+const repCards = document.querySelectorAll('.rep-card');
+const repIds = ['me', 'ep'];
+repCards.forEach((card, i) => {
+  card.addEventListener('click', () => showRep(repIds[i]));
+});
+
+// ── UPDATE showMain to hide all detail pages ──
+const _origShowMain = showMain;
+window.showMain = function() {
+  annDetailPage.classList.remove('active');
+  repDetailPage.classList.remove('active');
+  _origShowMain();
+};
+
+window.addEventListener('load', () => {
+  setTimeout(() => showToast('👋 Welcome back to NASCO Portal!', 'success'), 800);
+  setTimeout(() => showToast('⚠️ Assignment 2 due this Friday!', 'warning'), 2000);
+});
+</script>
+</body>
+</html>
